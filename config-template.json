@@ -1,0 +1,14 @@
+{"config": [
+    {"user": [
+        {
+            "email": "",
+            "password": ""
+        }
+    ]},
+    {"meets" : [
+        {
+            "name": "MEET",
+            "code": "AAA-AAAA-AAA"
+        }
+    ]}
+]}
