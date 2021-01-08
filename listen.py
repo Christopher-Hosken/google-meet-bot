@@ -1,21 +1,17 @@
 import chatbot.chatbot as chatbot
 import speech_recognition as sr
-import login
+from login import send_meet_message
 
 def run(browser):
     text = listen_to_meet()
-    respond_to_speaker(browser, text)
+    msg = respond_to_speaker(browser, text)
+    return text, msg
 
 def listen_to_meet():
-    mic_index = 0
-    for index, name in enumerate(sr.Microphone.list_microphone_names()):
-        if name == "default":
-            mic_index = index
     print("LISTEN: Listening...")
     r = sr.Recognizer()
-    with sr.Microphone(mic_index) as source:
+    with sr.Microphone(0) as source:
         try:
-            r.energy_threshold = 1500
             audio = r.listen(source, timeout=3, phrase_time_limit=5)
             text = r.recognize_google(audio, language="en-US").lower()
         except:
@@ -24,12 +20,16 @@ def listen_to_meet():
         return text
 
 def respond_to_speaker(browser, text):
+    msg = None
     print(text)
-    if (text is not None) and (text != ''):
+    if (text is not None) and (text != '') and (check_mic_muted(browser) == 'true'):
         msg = chatbot.chatbot_response(text)
         print(f"{text} -> {msg}")
-        login.send_meet_message(browser, msg)
+        send_meet_message(browser, msg)
+    return msg
+    
 
-while True:
-    text = listen_to_meet()
-    print(text)
+def check_mic_muted(browser):
+    mic_xpath = "/html/body/div[1]/c-wiz/div[1]/div/div[8]/div[3]/div[10]/div[2]/div[1]/div[1]/div/div"
+    active = browser.find_element_by_xpath(mic_xpath).get_attribute("data-is-muted")
+    return active
