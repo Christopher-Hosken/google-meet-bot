@@ -35,14 +35,24 @@ def respond_to_speaker(browser, text, threshold):
                 f.close()
             else:
                 f = open("chatbot/data/unkown.txt", "a")
-                if not ((f"{text} -> {msg}") in open("chatbot/data/unkown.txt", "r")):
+                write = True
+                for line in open("chatbot/data/unkown.txt").readlines():
+                    if (f"{text} -> {msg}") in line:
+                            write = False
+                if write:
                     f.write(f"{text} -> {msg}\n\n\n")
-                    f.close()
+                f.close()
+
         else:
             f = open("chatbot/data/unkown.txt", "a")
-            if not ((f"{text} -> {msg}") in open("chatbot/data/unkown.txt", "r")):
+            write = True
+            for line in open("chatbot/data/unkown.txt").readlines():
+                if (f"{text} -> {msg}") in line:
+                    write = False
+            if write:
                 f.write(f"{text} -> {msg}\n\n\n")
-                f.close()
+            f.close()
+
 
     return msg, category, confidence
 

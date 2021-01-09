@@ -43,15 +43,23 @@ def respond_to_chat(browser, chat_user, chat_text, online_users, threshold):
                     f.close()
                 else:
                     f = open("chatbot/data/unkown.txt", "a")
-                    if not ((f"{chat_user}: {chat_text} -> {msg}") in open("chatbot/data/unkown.txt", "r")):
+                    write = True
+                    for line in open("chatbot/data/unkown.txt").readlines():
+                        if (f"{chat_user}: {chat_text} -> {msg}") in line:
+                            write = False
+                    if write:
                         f.write(f"{chat_user}: {chat_text} -> {msg}\n\n\n")
-                        f.close()
+                    f.close()
 
             else:
                 f = open("chatbot/data/unkown.txt", "a")
-                if not ((f"{chat_user}: {chat_text} -> {msg}") in open("chatbot/data/unkown.txt", "r")):
+                write = True
+                for line in open("chatbot/data/unkown.txt").readlines():
+                    if (f"{chat_user}: {chat_text} -> {msg}") in line:
+                        write = False
+                if write:
                     f.write(f"{chat_user}: {chat_text} -> {msg}\n\n\n")
-                    f.close()
+                f.close()
 
 
     return chat_text, msg, category, confidence
