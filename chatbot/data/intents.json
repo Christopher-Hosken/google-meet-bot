@@ -78,6 +78,10 @@
                 {
                         "tag": "goodbye",
                         "patterns": [
+                                "i gtg",
+                                "i have to go",
+                                "soz i gotta go",
+                                "sorry i have to go",
                                 "bye!",
                                 "seeya",
                                 "see you later",
@@ -180,7 +184,13 @@
                                 "youre cool",
                                 "why are you so clever",
                                 "how are you so good",
-                                "how are you so fast "
+                                "how are you so fast",
+                                "you sexy",
+                                "youre hot",
+                                "youre cute",
+                                "youre so sexy",
+                                "you look amazing",
+                                "you look so happy"
                         ],
                         "responses": [
                                 "lol",
@@ -291,13 +301,18 @@
                                 "what is the answer to",
                                 "what do you think about this question",
                                 "do you have the answer to this question?",
-                                "what is the answer",
-                                "you can do this one "
+                                "what is the answer"
                         ],
                         "responses": [
                                 "hmm",
                                 "hmm.. idk",
-                                "hmm, can I have some time to think?"
+                                "hmm, can I have some time to think?",
+                                "uh",
+                                "not sure",
+                                "umm",
+                                "no idea",
+                                "i dont know",
+                                "idk"
                         ],
                         "context": [
                                 ""
@@ -306,6 +321,9 @@
                 {
                         "tag": "questions_work",
                         "patterns": [
+                                "have you finished?",
+                                "did you finish",
+                                "have you finished the questions?",
                                 "did you finish your hw",
                                 "did you do your homework",
                                 "did you finish the assignment",
@@ -391,6 +409,99 @@
                                 "they're good",
                                 "they're doing quite alright thanks",
                                 "they're finee"
+                        ],
+                        "context": [
+                                ""
+                        ]
+                },
+                {
+                        "tag": "favourites",
+                        "patterns": [
+                                "whats your favourite color",
+                                "do you have a fav color",
+                                "what color do you like the most",
+                                "which is your favourite color",
+                                "whos your favourite singer",
+                                "who is your favourite actor",
+                                "what is your favourite movie",
+                                "what is your favourite story",
+                                "what is your favourite book"
+                        ],
+                        "responses": [
+                                "I dont have a favourite",
+                                "I dont really have favourites"
+                        ],
+                        "context": [
+                                ""
+                        ]
+                },
+                {
+                        "tag": "specific_lunch",
+                        "patterns": [
+                                "are you having anything for lunch",
+                                "what are you going to have for lunch",
+                                "what are you having for lunch"
+                        ],
+                        "responses": [
+                                "mainly just sandwiches",
+                                "bread",
+                                "probably just bread"
+                        ],
+                        "context": [
+                                ""
+                        ]
+                },
+                {
+                        "tag": "specific_class",
+                        "patterns": [
+                                "when does class end?",
+                                "when does online learning end?",
+                                "when do you think online learning will end",
+                                "when does class finish?",
+                                "what time does class finish"
+                        ],
+                        "responses": [
+                                "hopefully soon",
+                                "no idea",
+                                "idk"
+                        ],
+                        "context": [
+                                ""
+                        ]
+                },
+                {
+                        "tag": "specific_sad",
+                        "patterns": [
+                                "died",
+                                "got sick",
+                                "got injured",
+                                "got hurt",
+                                "im sad",
+                                "im lonely",
+                                "im depressed"
+                        ],
+                        "responses": [
+                                "oh,",
+                                "oh..",
+                                ":(",
+                                "oh no"
+                        ],
+                        "context": [
+                                ""
+                        ]
+                },
+                {
+                        "tag": "nah_commands",
+                        "patterns": [
+                                "tell me a story",
+                                "call me",
+                                "give it to me"
+                        ],
+                        "responses": [
+                                "nah",
+                                "no :P",
+                                "nahh",
+                                "i'd rather not"
                         ],
                         "context": [
                                 ""

@@ -38,8 +38,20 @@ def respond_to_chat(browser, chat_user, chat_text, online_users, threshold):
                     print(f"User: {chat_user}")
                     print(f"{chat_text} -> {msg}")
                     send_meet_message(browser, msg)
-                    f = open("chatbot/data/transcript.txt", "w+")
+                    f = open("chatbot/data/transcript.txt", "a")
                     f.write(f"{chat_user}: {chat_text} -> {msg}\n\n\n")
                     f.close()
+                else:
+                    f = open("chatbot/data/unkown.txt", "a")
+                    if not ((f"{chat_user}: {chat_text} -> {msg}") in open("chatbot/data/unkown.txt", "r")):
+                        f.write(f"{chat_user}: {chat_text} -> {msg}\n\n\n")
+                        f.close()
+
+            else:
+                f = open("chatbot/data/unkown.txt", "a")
+                if not ((f"{chat_user}: {chat_text} -> {msg}") in open("chatbot/data/unkown.txt", "r")):
+                    f.write(f"{chat_user}: {chat_text} -> {msg}\n\n\n")
+                    f.close()
+
 
     return chat_text, msg, category, confidence

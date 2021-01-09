@@ -30,8 +30,18 @@ def respond_to_speaker(browser, text, threshold):
             if confidence > threshold:
                 print(f"{text} -> {msg}")
                 send_meet_message(browser, msg)
-                f = open("chatbot/data/transcript.txt", "w+")
+                f = open("chatbot/data/transcript.txt", "a")
                 f.write(f"Audio: {text} -> {msg}\n\n\n")
+                f.close()
+            else:
+                f = open("chatbot/data/unkown.txt", "a")
+                if not ((f"{text} -> {msg}") in open("chatbot/data/unkown.txt", "r")):
+                    f.write(f"{text} -> {msg}\n\n\n")
+                    f.close()
+        else:
+            f = open("chatbot/data/unkown.txt", "a")
+            if not ((f"{text} -> {msg}") in open("chatbot/data/unkown.txt", "r")):
+                f.write(f"{text} -> {msg}\n\n\n")
                 f.close()
 
     return msg, category, confidence
