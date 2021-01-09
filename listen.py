@@ -2,10 +2,10 @@ import chatbot.chatbot as chatbot
 import speech_recognition as sr
 from login import send_meet_message
 
-def run(browser):
+def run(browser, threshold):
     text = listen_to_meet()
-    msg = respond_to_speaker(browser, text)
-    return text, msg
+    msg, cat, conf = respond_to_speaker(browser, text, threshold)
+    return text, msg, cat, conf
 
 def listen_to_meet():
     print("LISTEN: Listening...")
@@ -19,15 +19,22 @@ def listen_to_meet():
             text = None
         return text
 
-def respond_to_speaker(browser, text):
+def respond_to_speaker(browser, text, threshold):
     msg = None
+    category = None
+    confidence = None
     print(text)
     if (text is not None) and (text != '') and (check_mic_muted(browser) == 'true'):
-        msg = chatbot.chatbot_response(text)
-        print(f"{text} -> {msg}")
-        send_meet_message(browser, msg)
-    return msg
-    
+        msg, category, confidence = chatbot.chatbot_response(text)
+        if msg != " ":
+            if confidence > threshold:
+                print(f"{text} -> {msg}")
+                send_meet_message(browser, msg)
+                f = open("chatbot/data/transcript.txt", "w+")
+                f.write(f"Audio: {text} -> {msg}\n\n\n")
+                f.close()
+
+    return msg, category, confidence
 
 def check_mic_muted(browser):
     mic_xpath = "/html/body/div[1]/c-wiz/div[1]/div/div[8]/div[3]/div[10]/div[2]/div[1]/div[1]/div/div"

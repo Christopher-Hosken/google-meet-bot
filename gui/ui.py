@@ -1,46 +1,16 @@
 import sys
-import threading
+import time
 import platform
-from PySide6 import QtCore
+from PySide6 import QtCore, QtGui
 from PySide6.QtWidgets import QMainWindow
 from PySide6.QtWidgets import *
 from gui.google_meet_bot_ui import *
-import read, listen
+import read
+import listen
 from login import login_google, login_meet
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
-
-class Worker(QObject):
-    finished = QtCore.Signal()
-
-    def run(self, window):
-        print("run!")
-        opt = Options()
-        opt.add_experimental_option("prefs", {
-            "profile.default_content_setting_values.media_stream_mic": 1,
-            "profile.default_content_setting_values.media_stream_camera": 1,
-            "profile.default_content_setting_values.notifications" : 1})
-        browser = webdriver.Chrome(ChromeDriverManager().install(), chrome_options=opt)
-        try:
-            login_google(browser, window.ui.input_email.text(), window.ui.input_password.text())
-            login_meet(browser, window.ui.input_code.text())
-        except Exception as e:
-            print(e)
-        while window.running:
-            try:
-                if (not window.enable_call):
-                    window.text_input, window.text_output = listen.run(browser)
-                if (not window.enable_chat):
-                    window.text_input, window.text_output, window.user = read.run(browser)
-                else:
-                    pass
-                window.update_data()
-            except Exception as e:
-                print(e)
-                window.running = False
-                self.finished.emit()
-        self.finished.emit()
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -48,7 +18,7 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        ## PRINT ==> SYSTEM
+        # PRINT ==> SYSTEM
         print('System: ' + platform.system())
         print('Version: ' + platform.release())
 
@@ -59,23 +29,31 @@ class MainWindow(QMainWindow):
         self.password = self.ui.input_password.text()
         self.code = self.ui.input_code.text()
 
-        self.text_input = None
-        self.text_output = None
-        self.call_input = None
-        self.call_output = None
-        self.user = None
-        self.running = False
+        self.browser = None
+        self.last_text_msg = " "
+        self.last_user = "N/A"
+        self.out_text_msg = " "
+        self.out_call_msg = " "
+        self.last_conf = 0.0
+        self.last_cat = " "
 
-        self.confidence = None
-        self.group = None
-        self.category = None
 
-        self.thread = None
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.update_data)
+
+        self.ui.btn_minimize.setIcon(QtGui.QIcon(
+            'gui/icons/16x16/cil-window-minimize.png'))
+        self.ui.btn_maximize_restore.setIcon(
+            QtGui.QIcon('gui/icons/16x16/cil-window-maximize.png'))
+        self.ui.btn_close.setIcon(QtGui.QIcon('gui/icons/16x16/cil-x.png'))
+
+        self.ui.btn_logo.setIcon(QtGui.QIcon('gui/icons/16x16/cil-speech.png'))
 
         ########################################################################
-        ## START - WINDOW ATTRIBUTES
+        # START - WINDOW ATTRIBUTES
         ########################################################################
-        flags = QtCore.Qt.WindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint)
+        flags = QtCore.Qt.WindowFlags(
+            QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint)
         self.setWindowFlags(flags)
 
         self.ui.frame_top.mouseMoveEvent = self.moveWindow
@@ -84,8 +62,10 @@ class MainWindow(QMainWindow):
         self.ui.btn_maximize_restore.clicked.connect(self.resize(780, 610))
         self.ui.btn_close.clicked.connect(sys.exit)
 
+        self.threshold = (self.ui.threshold_slider.value()) / 100
+
         self.ui.btn_chat.clicked.connect(self.toggle_chat)
-    
+
         self.ui.btn_call.clicked.connect(self.toggle_call)
 
         self.ui.btn_run.clicked.connect(self.run)
@@ -139,26 +119,94 @@ class MainWindow(QMainWindow):
             "}\n")
 
     def update_data(self):
-        self.ui.label_call_input.setText(self.call_input)
-        self.ui.label_call_output.setText(self.call_output)
-        self.ui.label_chat_output.setText(f'{self.text_input} ({self.user})')
-        self.ui.label_chat_input.setText(self.text_output)
+        call_input = None
+        call_output = None
+        text_input = None
+        text_output = None
+        user = "you"
+        confidence = None
+        group = None
+        category = None
 
-        self.ui.confidence_label.setText(self.confidence)
-        self.ui.group_label.setText(self.group)
-        self.ui.catergory_label.setText(self.category)
+        try:
+            if (not self.enable_call):
+                text_input, text_output, category, confidence = listen.run(self.browser, self.threshold)
+            if (not self.enable_chat):
+                text_input, text_output, user, category, confidence = read.run(self.browser, self.threshold)
+        except Exception as e:
+                print(e)
+
+        if user == "you":
+            text_input = self.last_text_msg
+            user = self.last_user
+        else:
+            self.last_text_msg = text_input
+            self.last_user = user
+
+        if text_output == None:
+            text_output = self.out_text_msg
+        else:
+            self.out_text_msg = text_output
+
+        if call_output == None:
+            call_output = self.out_call_msg
+        else:
+            self.out_call_msg = call_output
+
+        if (category == "" or category == None):
+            category = self.last_cat
+        else:
+            self.last_cat = category
+
+        if (confidence == None):
+            confidence = self.last_conf
+        else:
+            self.last_conf = confidence
+
+        self.ui.label_call_input.setText(call_input)
+        self.ui.label_call_output.setText(call_output)
+        self.ui.label_chat_input.setText(f'{text_input} ({user})')
+        self.ui.label_chat_output.setText(text_output)
+
+        self.ui.confidence_label.setText(str(confidence))
+        self.ui.catergory_label.setText(category)
         
     def update_graph(self):
         pass
 
     def run(self):
-        self.running = not self.running
+        if self.browser is not None:
+            self.ui.btn_run.setText("Run")
+            self.ui.btn_run.setStyleSheet(
+            u"QPushButton {\n"
+            "	border: 2px solid rgb(52, 59, 72);\n"
+            "	border-radius: 5px;	\n"
+            "	background-color: rgb(52, 59, 72);\n"
+            "}\n")
+            self.timer.stop()
+            self.browser.quit()
+            self.browser = None
+            return
 
-        if (self.thread is not None) and (self.thread.is_alive()):
-            self.thread.join()
+        else:
+            self.ui.btn_run.setText("Stop")
+            self.ui.btn_run.setStyleSheet(
+                u"QPushButton {\n"
+                "	border: 2px solid rgb(32, 36, 44);\n"
+                "	border-radius: 5px;	\n"
+                "	background-color: rgb(32, 36, 44);\n"
+                "}\n")
+            time.sleep(1)
+            opt = Options()
+            opt.add_experimental_option("prefs", {
+                "profile.default_content_setting_values.media_stream_mic": 1,
+                "profile.default_content_setting_values.media_stream_camera": 1,
+                "profile.default_content_setting_values.notifications" : 1})
+            self.browser = webdriver.Chrome(ChromeDriverManager().install(), chrome_options=opt)
+            try:
+                login_google(self.browser, self.ui.input_email.text(), self.ui.input_password.text())
+                login_meet(self.browser, self.ui.input_code.text())
+            except Exception as e:
+                print(e)
 
-        self.worker = Worker()
-        self.thread = threading.Thread(target=self.worker.run(self))
-        self.thread.daemon = True
-        self.thread.start()
-        self.worker.finished.connect(self.thread.join())
+            self.timer.start(500)

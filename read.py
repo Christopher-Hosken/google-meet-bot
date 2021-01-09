@@ -1,10 +1,10 @@
 import chatbot.chatbot as chatbot
 from login import send_meet_message
 
-def run(browser):
+def run(browser, threshold):
     user, text, online = read_meet(browser)
-    raw, msg = respond_to_chat(browser, user, text, online)
-    return raw, msg, user
+    raw, msg, cat, conf = respond_to_chat(browser, user, text, online, threshold)
+    return raw, msg, user, cat, conf
 
 def read_meet(browser):
     chatbox_xpath = "/html/body/div[1]/c-wiz/div[1]/div/div[8]/div[3]/div[3]/div/div[2]/div[2]/div[2]/span[2]/div/div[2]/div[last()]"
@@ -26,13 +26,20 @@ def read_meet(browser):
         online_users = None
     return chat_user, chat_text, online_users
 
-def respond_to_chat(browser, chat_user, chat_text, online_users):
+def respond_to_chat(browser, chat_user, chat_text, online_users, threshold):
     msg = None
+    category = None
+    confidence = None
     if (chat_text is not None) and (chat_text != ''):
         if (chat_user is not None) and (chat_user != 'you'):
-            print(f"User: {chat_user}")
-            msg = chatbot.chatbot_response(chat_text)
-            print(f"{chat_text} -> {msg}")
-            send_meet_message(browser, msg)
-    return chat_text, msg
-        
+            msg, category, confidence = chatbot.chatbot_response(chat_text)
+            if msg != " ":
+                if confidence > threshold:
+                    print(f"User: {chat_user}")
+                    print(f"{chat_text} -> {msg}")
+                    send_meet_message(browser, msg)
+                    f = open("chatbot/data/transcript.txt", "w+")
+                    f.write(f"{chat_user}: {chat_text} -> {msg}\n\n\n")
+                    f.close()
+
+    return chat_text, msg, category, confidence

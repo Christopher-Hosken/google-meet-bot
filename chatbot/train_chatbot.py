@@ -21,17 +21,17 @@ intents = json.loads(data_file)
 
 
 for intent in intents['intents']:
-    for pattern in intent['patterns']:
+        for pattern in intent['patterns']:
 
-        # take each word and tokenize it
-        w = nltk.word_tokenize(pattern)
-        words.extend(w)
-        # adding documents
-        documents.append((w, intent['tag']))
+            # take each word and tokenize it
+            w = nltk.word_tokenize(pattern)
+            words.extend(w)
+            # adding documents
+            documents.append((w, intent['tag']))
 
-        # adding classes to our class list
-        if intent['tag'] not in classes:
-            classes.append(intent['tag'])
+            # adding classes to our class list
+            if intent['tag'] not in classes:
+                classes.append(intent['tag'])
 
 words = [lemmatizer.lemmatize(w.lower()) for w in words if w not in ignore_words]
 words = sorted(list(set(words)))
@@ -89,7 +89,7 @@ model.add(Dense(len(train_y[0]), activation='softmax'))
 sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
 #fitting and saving the model
-hist = model.fit(np.array(train_x), np.array(train_y), epochs=2500, batch_size=10, verbose=1)
+hist = model.fit(np.array(train_x), np.array(train_y), epochs=10000, batch_size=5, verbose=1)
 model.save('chatbot/data/chatbot_model.h5', hist)
 
 print("model created")
