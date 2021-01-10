@@ -1,9 +1,38 @@
 {
         "intents": [
                 {
-                        "tag": "noresponse",
+                        "tag": "unkown",
                         "patterns": [
                                 " "
+                        ],
+                        "responses": [
+                                " "
+                        ],
+                        "context": [
+                                ""
+                        ]
+                },
+                {
+                        "tag": "no_response",
+                        "patterns": [
+                                "uhm",
+                                "wow",
+                                "woah",
+                                "dang",
+                                "aye",
+                                "hahahahah",
+                                "omg",
+                                "ah",
+                                "oh",
+                                "yep",
+                                "uhm",
+                                "ok",
+                                "okay",
+                                "lol",
+                                "xD",
+                                "i die",
+                                "lmao",
+                                "good"
                         ],
                         "responses": [
                                 " "
@@ -26,6 +55,41 @@
                                 " ",
                                 "ye",
                                 "heh"
+                        ],
+                        "context": [
+                                ""
+                        ]
+                },
+                {
+                        "tag": "nice",
+                        "patterns": [
+                                "he is so cute",
+                                "she is so cute",
+                                "they are so hot",
+                                "she is so hot",
+                                "it is my motivation in life",
+                                "he is my motivation in life",
+                                "he is above average",
+                                "they are average",
+                                "he is so cool",
+                                "she is so cool",
+                                "she is a goddess",
+                                "i like nutella",
+                                "i brought grapefruit juice",
+                                "i also brought froot loops",
+                                "nutella on pizza is so good",
+                                "i want to go to a bts concert",
+                                "i need money",
+                                "i need to watch greys anatomy"
+
+
+
+                        ],
+                        "responses": [
+                                "nice",
+                                "XD",
+                                "lol",
+                                "cool"
                         ],
                         "context": [
                                 ""
@@ -158,7 +222,14 @@
                                 "idiot",
                                 "you suck",
                                 "screw you",
-                                "I hate you"
+                                "I hate you",
+                                "I dont care what you say",
+                                "stoopid",
+                                "you're so mean",
+                                "ur so mean",
+                                "you're heartless",
+                                "i dont care about your favourite",
+                                "i dont care"
                         ],
                         "responses": [
                                 "XD",
@@ -247,6 +318,19 @@
                                 "k",
                                 "ok",
                                 "sure"
+                        ]
+                },
+                {
+                        "tag": "thanks",
+                        "patterns": [
+                                "thank you for answering",
+                                "thank you",
+                                "thanks"
+                        ],
+                        "responses": [
+                                "no problem",
+                                "np",
+                                ":)"
                         ]
                 },
                 {
@@ -502,6 +586,106 @@
                                 "no :P",
                                 "nahh",
                                 "i'd rather not"
+                        ],
+                        "context": [
+                                ""
+                        ]
+                },
+                {
+                        "tag": "apolgize",
+                        "patterns": [
+                                "excuse me",
+                                "pardon me",
+                                "say sorry"
+                        ],
+                        "responses": [
+                                "sorry :(",
+                                "sorry",
+                                "soz"
+                        ],
+                        "context": [
+                                ""
+                        ]
+                },
+                {
+                        "tag": "awkward_questions",
+                        "patterns": [
+                                "are you in love",
+                                "do you have an interest",
+                                "do you love me",
+                                "do you have a crush"
+                        ],
+                        "responses": [
+                                "maybe ;)",
+                                "no comment",
+                                "possiblyyyy"
+                        ],
+                        "context": [
+                                ""
+                        ]
+                },
+                {
+                        "tag": "friend",
+                        "patterns": [
+                                "am I a good friend",
+                                "is she a good friend",
+                                "is he a good friend",
+                                "are they a good friend"
+                        ],
+                        "responses": [
+                                "ofc",
+                                "lol what",
+                                "no comment :)"
+                        ],
+                        "context": [
+                                ""
+                        ]
+                },
+                {
+                        "tag": "strange_yes_questions",
+                        "patterns": [
+                                "are you straight",
+                                "do i have dick energy",
+                                "is he a good friend",
+                                "are they a good friend"
+                        ],
+                        "responses": [
+                                "ofc",
+                                "lol what",
+                                "no comment :)"
+                        ],
+                        "context": [
+                                ""
+                        ]
+                },
+                {
+                        "tag": "strange_no_questions",
+                        "patterns": [
+                                "are you gay",
+                                "are you going to tell me?",
+                                "can you understand french",
+                                "can you understand thai",
+                                "do you have tiktok"
+                        ],
+                        "responses": [
+                                "nope",
+                                "nop",
+                                "no"
+                        ],
+                        "context": [
+                                ""
+                        ]
+                },
+                {
+                        "tag": "age",
+                        "patterns": [
+                                "how old are you?",
+                                "what is your age?",
+                                "how old r u"
+                        ],
+                        "responses": [
+                                "16",
+                                "creepy lol"
                         ],
                         "context": [
                                 ""
