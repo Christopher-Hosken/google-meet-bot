@@ -11,6 +11,7 @@ from login import login_google, login_meet
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
+import speech_recognition as sr
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -28,6 +29,8 @@ class MainWindow(QMainWindow):
         self.email = self.ui.input_email.text()
         self.password = self.ui.input_password.text()
         self.code = self.ui.input_code.text()
+
+        self.mic = sr.Microphone()
 
         self.browser = None
         self.last_text_msg = " "
@@ -130,7 +133,8 @@ class MainWindow(QMainWindow):
 
         try:
             if (not self.enable_call):
-                text_input, text_output, category, confidence = listen.run(self.browser, self.threshold)
+                with self.mic as source:
+                    text_input, text_output, category, confidence = listen.run(self.browser, self.threshold, source)
             if (not self.enable_chat):
                 text_input, text_output, user, category, confidence = read.run(self.browser, self.threshold)
         except Exception as e:

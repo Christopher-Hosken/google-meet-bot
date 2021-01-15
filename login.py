@@ -46,14 +46,17 @@ def login_meet(browser, code):
     time.sleep(3)
     button_xpath = "/html/body/div[1]/div[3]/div/div[2]/span/div/div[4]/div[2]/div"
     browser.find_element_by_xpath(button_xpath).click()
-
-    time.sleep(10)
-    mic_xpath = "/html/body/div[1]/c-wiz/div/div/div[8]/div[3]/div/div/div[2]/div/div[1]/div[1]/div[1]/div[1]/div[3]/div[1]/div/div/div"
-    browser.find_element_by_xpath(mic_xpath).click()
-
-    time.sleep(3)
-    cam_xpath = "/html/body/div[1]/c-wiz/div/div/div[8]/div[3]/div/div/div[2]/div/div[1]/div[1]/div[1]/div[1]/div[3]/div[2]/div/div"
-    browser.find_element_by_xpath(cam_xpath).click()
+    
+    try:
+        time.sleep(10)
+        mic_xpath = "/html/body/div[1]/c-wiz/div/div/div[8]/div[3]/div/div/div[2]/div/div[1]/div[1]/div[1]/div[1]/div[3]/div[1]/div/div/div"
+        browser.find_element_by_xpath(mic_xpath).click()
+    
+        time.sleep(3)
+        cam_xpath = "/html/body/div[1]/c-wiz/div/div/div[8]/div[3]/div/div/div[2]/div/div[1]/div[1]/div[1]/div/div[4]/div[2]/div/div"
+        browser.find_element_by_xpath(cam_xpath).click()
+    except:
+        pass
 
     time.sleep(3)
     enter_xpath = "/html/body/div[1]/c-wiz/div/div/div[8]/div[3]/div/div/div[2]/div/div[1]/div[2]/div/div[2]/div/div[1]/div[1]"

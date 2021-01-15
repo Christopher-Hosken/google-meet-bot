@@ -2,22 +2,21 @@ import chatbot.chatbot as chatbot
 import speech_recognition as sr
 from login import send_meet_message
 
-def run(browser, threshold):
-    text = listen_to_meet()
+def run(browser, threshold, mic):
+    text = listen_to_meet(mic)
     msg, cat, conf = respond_to_speaker(browser, text, threshold)
     return text, msg, cat, conf
 
-def listen_to_meet():
-    print("LISTEN: Listening...")
+def listen_to_meet(source):
     r = sr.Recognizer()
-    with sr.Microphone(0) as source:
-        try:
-            audio = r.listen(source, timeout=3, phrase_time_limit=5)
-            text = r.recognize_google(audio, language="en-US").lower()
-        except:
-            print("LISTEN: Nothing detected.")
-            text = None
-        return text
+    print("LISTEN: Listening...")
+    try:
+        audio = r.listen(source, timeout=3, phrase_time_limit=5)
+        text = r.recognize_google(audio, language="en-US").lower()
+    except:
+        print("LISTEN: Nothing detected.")
+        text = None
+    return text
 
 def respond_to_speaker(browser, text, threshold):
     msg = None
@@ -53,10 +52,9 @@ def respond_to_speaker(browser, text, threshold):
                 f.write(f"{text} -> {msg}\n\n\n")
             f.close()
 
-
     return msg, category, confidence
 
 def check_mic_muted(browser):
-    mic_xpath = "/html/body/div[1]/c-wiz/div[1]/div/div[8]/div[3]/div[10]/div[2]/div[1]/div[1]/div/div"
+    mic_xpath = "/html/body/div[1]/c-wiz/div[1]/div/div[8]/div[3]/div[9]/div[2]/div[1]/div/div/div"
     active = browser.find_element_by_xpath(mic_xpath).get_attribute("data-is-muted")
     return active
